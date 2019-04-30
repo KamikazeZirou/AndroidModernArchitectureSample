@@ -13,7 +13,7 @@ class MainActivity : AppCompatActivity() {
         val transaction = fragmentManager.beginTransaction()
         val fragment = UserProfileFragment()
         val args = Bundle()
-        args.putString(UserProfileFragment.UID_KEY, "1")
+        args.putString(UserProfileFragment.UID_KEY, "KamikazeZirou")
         fragment.arguments = args
 
         transaction.add(R.id.container, fragment)

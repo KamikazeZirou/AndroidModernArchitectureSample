@@ -1,3 +1,3 @@
 package com.example.architecturelearning
 
-data class User(var name: String, var email: String) {}
+data class User(val id: Int, var name: String, var email: String) {}
