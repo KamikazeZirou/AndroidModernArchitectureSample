@@ -8,7 +8,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
-@Module(includes = arrayOf(ViewModelModule::class))
+@Module
 class AppModule {
     private companion object {
         const val GITHUB_BASE_URL = "https://api.github.com/"

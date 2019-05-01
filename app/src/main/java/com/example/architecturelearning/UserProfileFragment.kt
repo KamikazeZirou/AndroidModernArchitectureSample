@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.architecturelearning.databinding.UserProfileBinding
+import dagger.android.AndroidInjection
+import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
 class UserProfileFragment : Fragment() {
@@ -29,9 +31,8 @@ class UserProfileFragment : Fragment() {
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
+        AndroidSupportInjection.inject(this)
         super.onActivityCreated(savedInstanceState)
-
-        (activity!!.application as UserProfileApplication).component.inject(this)
 
         viewModel = ViewModelProviders.of(this, factory).get(UserProfileViewModel::class.java)
         val userId = arguments?.getString(UID_KEY) ?: ""
