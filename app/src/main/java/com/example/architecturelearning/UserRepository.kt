@@ -5,8 +5,11 @@ import android.arch.lifecycle.MutableLiveData
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import javax.inject.Inject
 
-class UserRepository(val webservice: GitHubService) {
+class UserRepository
+    @Inject constructor(private val webservice: GitHubService) {
+
     fun getUser(userId: String): LiveData<User> {
         val data = MutableLiveData<User>()
 

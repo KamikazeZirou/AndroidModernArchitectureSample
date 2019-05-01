@@ -7,16 +7,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.architecturelearning.databinding.UserProfileBinding
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Inject
 
-class UserProfileFragment: Fragment() {
+class UserProfileFragment : Fragment() {
     companion object {
         private val TAG = UserProfileFragment::class.simpleName
         val UID_KEY = "uid"
     }
+
     private lateinit var viewModel: UserProfileViewModel
     private lateinit var binding: UserProfileBinding
+
+    @Inject
+    lateinit var userRepo: UserRepository
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = UserProfileBinding.inflate(inflater, container, false)
@@ -26,18 +29,12 @@ class UserProfileFragment: Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://api.github.com/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        val service = retrofit.create(GitHubService::class.java)
-        val repo: UserRepository = UserRepository(service)
-
+        DaggerAppComponent.builder().appModule(AppModule()).build().inject(this)
 
         viewModel = ViewModelProviders.of(this).get(UserProfileViewModel::class.java)
         val userId = arguments?.getString(UID_KEY) ?: ""
         // TODO Repositoryクラスは依存性の注入で渡す
-        viewModel.init(repo, userId)
+        viewModel.init(userRepo, userId)
 
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
