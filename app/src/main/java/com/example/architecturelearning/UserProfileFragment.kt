@@ -6,8 +6,6 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.architecturelearning.com.example.architecturelearning.di.AppModule
-import com.example.architecturelearning.com.example.architecturelearning.di.DaggerAppComponent
 import com.example.architecturelearning.databinding.UserProfileBinding
 import javax.inject.Inject
 
@@ -33,8 +31,7 @@ class UserProfileFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        // TODO もっと適切な場所でinject。Applicationクラス?
-        DaggerAppComponent.builder().appModule(AppModule()).build().inject(this)
+        (activity!!.application as UserProfileApplication).component.inject(this)
 
         viewModel = ViewModelProviders.of(this, factory).get(UserProfileViewModel::class.java)
         val userId = arguments?.getString(UID_KEY) ?: ""
