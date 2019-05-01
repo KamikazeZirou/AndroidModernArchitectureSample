@@ -3,14 +3,16 @@ package com.example.architecturelearning
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
+import javax.inject.Inject
 
 
-class UserProfileViewModel(): ViewModel() {
-    lateinit var userRepo: UserRepository
-    lateinit var user: LiveData<User>
+class UserProfileViewModel
+    @Inject constructor(private val userRepo: UserRepository): ViewModel() {
+    var user: LiveData<User>? = null
 
-    fun init(userRepo: UserRepository, userId: String) {
-        this.userRepo = userRepo
-        user = userRepo.getUser(userId)
+    fun init(userId: String) {
+        if (user == null) {
+            user = userRepo.getUser(userId)
+        }
     }
 }

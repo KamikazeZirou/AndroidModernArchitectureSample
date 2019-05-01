@@ -1,5 +1,7 @@
 package com.example.architecturelearning
 
+import android.arch.lifecycle.ViewModel
+import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -15,11 +17,13 @@ class UserProfileFragment : Fragment() {
         val UID_KEY = "uid"
     }
 
+    @Inject
+    lateinit var factory: ViewModelFactory
+
     private lateinit var viewModel: UserProfileViewModel
     private lateinit var binding: UserProfileBinding
 
-    @Inject
-    lateinit var userRepo: UserRepository
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = UserProfileBinding.inflate(inflater, container, false)
@@ -29,17 +33,14 @@ class UserProfileFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        // TODO もっと適切な場所でinject。Applicationクラス?
         DaggerAppComponent.builder().appModule(AppModule()).build().inject(this)
 
-        viewModel = ViewModelProviders.of(this).get(UserProfileViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, factory).get(UserProfileViewModel::class.java)
         val userId = arguments?.getString(UID_KEY) ?: ""
-        // TODO Repositoryクラスは依存性の注入で渡す
-        viewModel.init(userRepo, userId)
+        viewModel.init(userId)
 
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
-
-        binding.upateButton.setOnClickListener {
-        }
     }
 }
