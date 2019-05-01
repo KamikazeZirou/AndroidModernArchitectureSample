@@ -1,16 +1,12 @@
-package com.example.architecturelearning
+package com.example.architecturelearning.com.example.architecturelearning.di
 
-import android.arch.lifecycle.ViewModel
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
+import com.example.architecturelearning.GitHubService
+import com.example.architecturelearning.UserRepository
 import dagger.Module
 import dagger.Provides
-import dagger.multibindings.IntoMap
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import javax.inject.Provider
 import javax.inject.Singleton
-import kotlin.reflect.KClass
 
 @Module(includes = arrayOf(ViewModelModule::class))
 class AppModule {
@@ -20,7 +16,8 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideUserRepository(service: GitHubService): UserRepository = UserRepository(service)
+    fun provideUserRepository(service: GitHubService): UserRepository =
+        UserRepository(service)
 
     @Provides
     @Singleton

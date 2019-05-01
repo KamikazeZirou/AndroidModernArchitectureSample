@@ -1,4 +1,4 @@
-package com.example.architecturelearning
+package com.example.architecturelearning.com.example.architecturelearning.di
 
 import android.arch.lifecycle.ViewModel
 import dagger.MapKey
