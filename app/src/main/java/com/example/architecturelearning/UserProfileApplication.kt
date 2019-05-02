@@ -1,7 +1,7 @@
 package com.example.architecturelearning
 
 import android.app.Application
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import com.example.architecturelearning.com.example.architecturelearning.di.DaggerAppComponent
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -11,14 +11,17 @@ import javax.inject.Inject
 
 class UserProfileApplication : Application(), HasSupportFragmentInjector {
     @Inject
-    lateinit var dispatchingFragmentInjector: DispatchingAndroidInjector<Fragment>
+    lateinit var dispatchingFragmentInjector: DispatchingAndroidInjector<androidx.fragment.app.Fragment>
 
     override fun onCreate() {
-        DaggerAppComponent.create().inject(this)
+        DaggerAppComponent.builder()
+            .application(this)
+            .build()
+            .inject(this)
         super.onCreate()
     }
 
-    override fun supportFragmentInjector(): AndroidInjector<Fragment> {
+    override fun supportFragmentInjector(): AndroidInjector<androidx.fragment.app.Fragment> {
         return dispatchingFragmentInjector
     }
 }

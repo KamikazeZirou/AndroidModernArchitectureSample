@@ -1,5 +1,6 @@
 package com.example.architecturelearning.com.example.architecturelearning.di
 
+import android.app.Application
 import com.example.architecturelearning.GitHubService
 import com.example.architecturelearning.UserRepository
 import com.google.gson.FieldNamingPolicy
@@ -9,6 +10,12 @@ import dagger.Provides
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
+import com.example.architecturelearning.UserDao
+import androidx.room.Room
+import com.example.architecturelearning.UserDatabase
+import java.util.concurrent.Executor
+import java.util.concurrent.Executors
+
 
 @Module
 class AppModule {
@@ -19,10 +26,31 @@ class AppModule {
     // このProvide関数は不要。
     // UserRepositoryのコンストラクタはGitHubServiceのみに依存しているため。
     // GitHubServiceのProvide関数があると、この関数がなくてもInjectしてくれる。
+//    @Provides
+//    @Singleton
+//    fun provideUserRepository(service: GitHubService): UserRepository =
+//        UserRepository(service)
+
     @Provides
     @Singleton
-    fun provideUserRepository(service: GitHubService): UserRepository =
-        UserRepository(service)
+    fun provideDatabase(application: Application): UserDatabase {
+        return Room.databaseBuilder(
+            application,
+            UserDatabase::class.java, "MyDatabase.db"
+        )
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserDao(database: UserDatabase): UserDao {
+        return database.userDao()
+    }
+
+    @Provides
+    fun provideExecutor(): Executor {
+        return Executors.newSingleThreadExecutor()
+    }
 
     @Provides
     @Singleton

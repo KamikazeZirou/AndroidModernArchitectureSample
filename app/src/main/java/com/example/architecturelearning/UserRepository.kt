@@ -1,39 +1,36 @@
 package com.example.architecturelearning
 
-import android.arch.lifecycle.MutableLiveData
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.*
+import java.util.concurrent.Executor
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class UserRepository
-    @Inject constructor(private val webservice: GitHubService) {
+    @Inject constructor(private val webservice: GitHubService,
+                        private val userDao: UserDao,
+                        private val executor: Executor) {
+    fun getUser(username: String): LiveData<User> {
+        refreshUser(username)
+        return userDao.load(username)
+    }
 
-    private val cache: MutableMap<String, User> = mutableMapOf()
+    private fun refreshUser(username: String) {
+        executor.execute {
+            val userExists = userDao.hasUser(username, System.currentTimeMillis() - 3600 * 1000)
+            if (userExists) {
+                return@execute
+            }
 
-    fun getUser(username: String, result: MutableLiveData<User>) {
-        cache[username]?.let {
-            result.value = it
-            return
+            val response = webservice.getUser(username).execute()
+            val user = response.body()!!
+            user.lastRefresh = System.currentTimeMillis()
+            userDao.save(response.body()!!)
         }
-
-        cache[username] = User.EMPTY_USER
-
-        webservice.getUser(username).enqueue(object: Callback<User> {
-            override fun onResponse(call: Call<User>, response: Response<User>) {
-                val user = response.body()
-                result.value = user
-
-                if (user != null) {
-                    cache[username] = user
-                } else {
-                    cache.remove(username)
-                }
-            }
-
-            override fun onFailure(call: Call<User>, t: Throwable) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-        })
     }
 }

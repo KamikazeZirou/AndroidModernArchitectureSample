@@ -1,8 +1,8 @@
 package com.example.architecturelearning.com.example.architecturelearning.di
 
-import android.arch.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider
 import dagger.Binds
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.ViewModel
 import com.example.architecturelearning.UserProfileViewModel
 import com.example.architecturelearning.ViewModelFactory
 import dagger.Module

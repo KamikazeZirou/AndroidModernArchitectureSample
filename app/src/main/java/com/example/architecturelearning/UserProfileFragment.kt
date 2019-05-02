@@ -1,13 +1,12 @@
 package com.example.architecturelearning
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.os.AsyncTask
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +16,7 @@ import java.net.URL
 import java.net.URLConnection
 import javax.inject.Inject
 
-class UserProfileFragment : Fragment() {
+class UserProfileFragment : androidx.fragment.app.Fragment() {
     companion object {
         private val TAG = UserProfileFragment::class.simpleName
         const val USERNAME_KEY = "username"
@@ -42,7 +41,7 @@ class UserProfileFragment : Fragment() {
 
         viewModel = ViewModelProviders.of(this, factory).get(UserProfileViewModel::class.java)
         val username = arguments?.getString(USERNAME_KEY) ?: ""
-        viewModel.load(username)
+        viewModel.init(username)
         viewModel.user?.observe(this, object: Observer<User?> {
             override fun onChanged(t: User?) {
                 t ?: return
@@ -53,7 +52,7 @@ class UserProfileFragment : Fragment() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
         binding.upateButton.setOnClickListener {
-            viewModel.load(binding.editNameText.text.toString())
+//            viewModel.init(binding.editNameText.text.toString())
         }
     }
 

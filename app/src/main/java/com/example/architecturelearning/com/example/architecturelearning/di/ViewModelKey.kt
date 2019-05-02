@@ -1,6 +1,6 @@
 package com.example.architecturelearning.com.example.architecturelearning.di
 
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.ViewModel
 import dagger.MapKey
 import java.lang.annotation.Documented
 import kotlin.reflect.KClass
