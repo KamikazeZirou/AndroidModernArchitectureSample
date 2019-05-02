@@ -2,6 +2,7 @@ package com.example.architecturelearning
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
+import android.graphics.Bitmap
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

@@ -2,6 +2,8 @@ package com.example.architecturelearning.com.example.architecturelearning.di
 
 import com.example.architecturelearning.GitHubService
 import com.example.architecturelearning.UserRepository
+import com.google.gson.FieldNamingPolicy
+import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
@@ -24,10 +26,16 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideGitHubService(): GitHubService =
-        Retrofit.Builder()
+    fun provideGitHubService(): GitHubService {
+        // GitHubのAPIのResponseはsnakecase。
+        // それをKotlin上のcamelCaseのフィールドに変換できるようにする指定。
+        val gson = GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create()
+
+        return Retrofit.Builder()
             .baseUrl(GITHUB_BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(GitHubService::class.java)
+    }
+
 }
