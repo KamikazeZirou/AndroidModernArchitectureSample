@@ -9,15 +9,16 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val fragmentManager = supportFragmentManager
-        val transaction = fragmentManager.beginTransaction()
-        val fragment = UserProfileFragment()
-        val args = Bundle()
-        args.putString(UserProfileFragment.LOGINNAME_KEY, "KamikazeZirou")
-        fragment.arguments = args
+        if (savedInstanceState == null) {
+            val fragmentManager = supportFragmentManager
+            val transaction = fragmentManager.beginTransaction()
+            val fragment = UserProfileFragment()
+            val args = Bundle()
+            args.putString(UserProfileFragment.LOGINNAME_KEY, "KamikazeZirou")
+            fragment.arguments = args
 
-        transaction.add(R.id.container, fragment)
-        transaction.commit()
-
+            transaction.add(R.id.container, fragment)
+            transaction.commit()
+        }
     }
 }
