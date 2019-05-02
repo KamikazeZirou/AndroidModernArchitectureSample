@@ -14,6 +14,9 @@ class AppModule {
         const val GITHUB_BASE_URL = "https://api.github.com/"
     }
 
+    // このProvide関数は不要。
+    // UserRepositoryのコンストラクタはGitHubServiceのみに依存しているため。
+    // GitHubServiceのProvide関数があると、この関数がなくてもInjectしてくれる。
     @Provides
     @Singleton
     fun provideUserRepository(service: GitHubService): UserRepository =

@@ -10,10 +10,16 @@ import javax.inject.Inject
 class UserRepository
     @Inject constructor(private val webservice: GitHubService) {
 
-    fun getUser(userId: String): LiveData<User> {
-        val data = MutableLiveData<User>()
+    private val cache: MutableMap<String, LiveData<User>> = mutableMapOf()
 
-        // TODO 毎回通信しないようにする
+    fun getUser(userId: String): LiveData<User> {
+        cache[userId]?.let {
+            return it
+        }
+
+        val data = MutableLiveData<User>()
+        cache[userId] = data
+
         webservice.getUser(userId).enqueue(object: Callback<User> {
             override fun onResponse(call: Call<User>, response: Response<User>) {
                 data.value = response.body()
