@@ -10,6 +10,6 @@ interface GitHubService {
      * @Path("user") annotation on the userId parameter marks it as a
      * replacement for the {user} placeholder in the @GET path
      */
-    @GET("/users/{userId}")
-    fun getUser(@Path("userId") userId: String): Call<User>
+    @GET("/users/{username}")
+    fun getUser(@Path("username") username: String): Call<User>
 }

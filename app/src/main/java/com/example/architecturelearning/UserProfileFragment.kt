@@ -20,7 +20,7 @@ import javax.inject.Inject
 class UserProfileFragment : Fragment() {
     companion object {
         private val TAG = UserProfileFragment::class.simpleName
-        val UID_KEY = "uid"
+        const val USERNAME_KEY = "username"
     }
 
     @Inject
@@ -41,8 +41,8 @@ class UserProfileFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         viewModel = ViewModelProviders.of(this, factory).get(UserProfileViewModel::class.java)
-        val userId = arguments?.getString(UID_KEY) ?: ""
-        viewModel.load(userId)
+        val username = arguments?.getString(USERNAME_KEY) ?: ""
+        viewModel.load(username)
         viewModel.user?.observe(this, object: Observer<User?> {
             override fun onChanged(t: User?) {
                 t ?: return

@@ -1,8 +1,6 @@
 package com.example.architecturelearning
 
-import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
-import android.graphics.Bitmap
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -13,23 +11,23 @@ class UserRepository
 
     private val cache: MutableMap<String, User> = mutableMapOf()
 
-    fun getUser(userId: String, result: MutableLiveData<User>) {
-        cache[userId]?.let {
+    fun getUser(username: String, result: MutableLiveData<User>) {
+        cache[username]?.let {
             result.value = it
             return
         }
 
-        cache[userId] = User.EMPTY_USER
+        cache[username] = User.EMPTY_USER
 
-        webservice.getUser(userId).enqueue(object: Callback<User> {
+        webservice.getUser(username).enqueue(object: Callback<User> {
             override fun onResponse(call: Call<User>, response: Response<User>) {
                 val user = response.body()
                 result.value = user
 
                 if (user != null) {
-                    cache[userId] = user
+                    cache[username] = user
                 } else {
-                    cache.remove(userId)
+                    cache.remove(username)
                 }
             }
 
