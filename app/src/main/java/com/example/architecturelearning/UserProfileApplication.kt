@@ -1,8 +1,7 @@
 package com.example.architecturelearning
 
 import android.app.Application
-import androidx.fragment.app.Fragment
-import com.example.architecturelearning.com.example.architecturelearning.di.DaggerAppComponent
+import com.example.architecturelearning.di.DaggerAppComponent
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector

@@ -1,4 +1,4 @@
-package com.example.architecturelearning.com.example.architecturelearning.di
+package com.example.architecturelearning.di
 
 import androidx.lifecycle.ViewModelProvider
 import dagger.Binds

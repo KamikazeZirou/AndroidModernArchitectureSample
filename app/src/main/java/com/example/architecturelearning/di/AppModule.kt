@@ -1,8 +1,7 @@
-package com.example.architecturelearning.com.example.architecturelearning.di
+package com.example.architecturelearning.di
 
 import android.app.Application
 import com.example.architecturelearning.GitHubService
-import com.example.architecturelearning.UserRepository
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.GsonBuilder
 import dagger.Module

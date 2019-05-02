@@ -24,11 +24,8 @@ class UserProfileFragment : androidx.fragment.app.Fragment() {
 
     @Inject
     lateinit var factory: ViewModelFactory
-
     private lateinit var viewModel: UserProfileViewModel
     private lateinit var binding: UserProfileBinding
-
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = UserProfileBinding.inflate(inflater, container, false)
@@ -39,12 +36,12 @@ class UserProfileFragment : androidx.fragment.app.Fragment() {
         AndroidSupportInjection.inject(this)
         super.onActivityCreated(savedInstanceState)
 
+        binding.lifecycleOwner = this
+
         viewModel = ViewModelProviders.of(this, factory).get(UserProfileViewModel::class.java)
         val loginName = arguments?.getString(LOGINNAME_KEY) ?: ""
         initViewModel(loginName)
 
-        binding.lifecycleOwner = this
-        binding.viewModel = viewModel
         binding.upateButton.setOnClickListener {
             initViewModel(binding.editNameText.text.toString())
         }
@@ -52,41 +49,6 @@ class UserProfileFragment : androidx.fragment.app.Fragment() {
 
     private fun initViewModel(loginName: String) {
         viewModel.init(loginName)
-        viewModel.user?.observe(this, object: Observer<User?> {
-            override fun onChanged(t: User?) {
-                t ?: return
-                GetAvatarTask().execute(t.avatarUrl)
-            }
-        })
         binding.viewModel = viewModel
-    }
-
-    inner class GetAvatarTask: AsyncTask<String, Void, Bitmap>() {
-        override fun onPreExecute() {
-            super.onPreExecute()
-
-            (binding.avatarView.drawable as? BitmapDrawable)?.bitmap?.let {
-                binding.avatarView.setImageBitmap(null)
-                it.recycle()
-            }
-        }
-
-        override fun doInBackground(vararg params: String?): Bitmap? {
-            var conn: URLConnection? = null
-            try {
-                val url = URL(params[0])
-                conn = url.openConnection()
-                conn.doInput = true
-                conn.connect()
-                return BitmapFactory.decodeStream(conn.getInputStream())
-            } finally {
-                conn?.getInputStream()?.close()
-            }
-        }
-
-        override fun onPostExecute(result: Bitmap?) {
-            super.onPostExecute(result)
-            binding.avatarView.setImageBitmap(result)
-        }
     }
 }

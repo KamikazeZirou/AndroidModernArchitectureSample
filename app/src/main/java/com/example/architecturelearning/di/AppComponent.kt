@@ -1,8 +1,7 @@
-package com.example.architecturelearning.com.example.architecturelearning.di
+package com.example.architecturelearning.di
 
 import android.app.Application
 import com.example.architecturelearning.UserProfileApplication
-import com.example.architecturelearning.UserProfileFragment
 import dagger.Component
 import dagger.android.support.AndroidSupportInjectionModule
 import javax.inject.Singleton
