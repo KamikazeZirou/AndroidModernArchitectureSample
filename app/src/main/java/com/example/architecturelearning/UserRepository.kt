@@ -15,22 +15,22 @@ class UserRepository
     @Inject constructor(private val webservice: GitHubService,
                         private val userDao: UserDao,
                         private val executor: Executor) {
-    fun getUser(username: String): LiveData<User> {
-        refreshUser(username)
-        return userDao.load(username)
+    fun getUser(loginName: String): LiveData<User> {
+        refreshUser(loginName)
+        return userDao.load(loginName)
     }
 
-    private fun refreshUser(username: String) {
+    private fun refreshUser(loginName: String) {
         executor.execute {
-            val userExists = userDao.hasUser(username, System.currentTimeMillis() - 3600 * 1000)
+            val userExists = userDao.hasUser(loginName, System.currentTimeMillis() - 3600 * 1000)
             if (userExists) {
                 return@execute
             }
 
-            val response = webservice.getUser(username).execute()
+            val response = webservice.getUser(loginName).execute()
             val user = response.body()!!
             user.lastRefresh = System.currentTimeMillis()
-            userDao.save(response.body()!!)
+            userDao.save(user)
         }
     }
 }

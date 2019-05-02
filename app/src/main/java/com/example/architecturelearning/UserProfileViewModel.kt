@@ -10,9 +10,9 @@ class UserProfileViewModel
     @Inject constructor(private val userRepo: UserRepository): ViewModel() {
     var user: LiveData<User>? = null
 
-    fun init(username: String) {
-        if (user == null) {
-            user = userRepo.getUser(username)
+    fun init(loginName: String) {
+        if (user == null || user?.value?.login != loginName) {
+            user = userRepo.getUser(loginName)
         }
     }
 }

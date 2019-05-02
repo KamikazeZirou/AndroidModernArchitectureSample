@@ -6,7 +6,7 @@ import java.lang.annotation.Documented
 import kotlin.reflect.KClass
 
 
-@Documented
+@MustBeDocumented
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.RUNTIME)
 @MapKey

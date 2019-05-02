@@ -19,7 +19,7 @@ import javax.inject.Inject
 class UserProfileFragment : androidx.fragment.app.Fragment() {
     companion object {
         private val TAG = UserProfileFragment::class.simpleName
-        const val USERNAME_KEY = "username"
+        const val LOGINNAME_KEY = "loginName"
     }
 
     @Inject
@@ -40,20 +40,25 @@ class UserProfileFragment : androidx.fragment.app.Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         viewModel = ViewModelProviders.of(this, factory).get(UserProfileViewModel::class.java)
-        val username = arguments?.getString(USERNAME_KEY) ?: ""
-        viewModel.init(username)
+        val loginName = arguments?.getString(LOGINNAME_KEY) ?: ""
+        initViewModel(loginName)
+
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
+        binding.upateButton.setOnClickListener {
+            initViewModel(binding.editNameText.text.toString())
+        }
+    }
+
+    private fun initViewModel(loginName: String) {
+        viewModel.init(loginName)
         viewModel.user?.observe(this, object: Observer<User?> {
             override fun onChanged(t: User?) {
                 t ?: return
                 GetAvatarTask().execute(t.avatarUrl)
             }
         })
-
-        binding.lifecycleOwner = this
         binding.viewModel = viewModel
-        binding.upateButton.setOnClickListener {
-//            viewModel.init(binding.editNameText.text.toString())
-        }
     }
 
     inner class GetAvatarTask: AsyncTask<String, Void, Bitmap>() {
