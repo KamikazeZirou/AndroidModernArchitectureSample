@@ -11,26 +11,31 @@ import javax.inject.Inject
 class UserRepository
     @Inject constructor(private val webservice: GitHubService) {
 
-    private val cache: MutableMap<String, LiveData<User>> = mutableMapOf()
+    private val cache: MutableMap<String, User> = mutableMapOf()
 
-    fun getUser(userId: String): LiveData<User> {
+    fun getUser(userId: String, result: MutableLiveData<User>) {
         cache[userId]?.let {
-            return it
+            result.value = it
+            return
         }
 
-        val data = MutableLiveData<User>()
-        cache[userId] = data
+        cache[userId] = User.EMPTY_USER
 
         webservice.getUser(userId).enqueue(object: Callback<User> {
             override fun onResponse(call: Call<User>, response: Response<User>) {
-                data.value = response.body()
+                val user = response.body()
+                result.value = user
+
+                if (user != null) {
+                    cache[userId] = user
+                } else {
+                    cache.remove(userId)
+                }
             }
 
             override fun onFailure(call: Call<User>, t: Throwable) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
         })
-
-        return data
     }
 }

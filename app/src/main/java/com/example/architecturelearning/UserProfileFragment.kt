@@ -1,11 +1,10 @@
 package com.example.architecturelearning
 
-import android.annotation.SuppressLint
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.net.Uri
+import android.graphics.drawable.BitmapDrawable
 import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -13,9 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.architecturelearning.databinding.UserProfileBinding
-import dagger.android.AndroidInjection
 import dagger.android.support.AndroidSupportInjection
-import retrofit2.http.Url
 import java.net.URL
 import java.net.URLConnection
 import javax.inject.Inject
@@ -45,7 +42,7 @@ class UserProfileFragment : Fragment() {
 
         viewModel = ViewModelProviders.of(this, factory).get(UserProfileViewModel::class.java)
         val userId = arguments?.getString(UID_KEY) ?: ""
-        viewModel.init(userId)
+        viewModel.load(userId)
         viewModel.user?.observe(this, object: Observer<User?> {
             override fun onChanged(t: User?) {
                 t ?: return
@@ -55,11 +52,19 @@ class UserProfileFragment : Fragment() {
 
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
+        binding.upateButton.setOnClickListener {
+            viewModel.load(binding.editNameText.text.toString())
+        }
     }
 
     inner class GetAvatarTask: AsyncTask<String, Void, Bitmap>() {
         override fun onPreExecute() {
             super.onPreExecute()
+
+            (binding.avatarView.drawable as? BitmapDrawable)?.bitmap?.let {
+                binding.avatarView.setImageBitmap(null)
+                it.recycle()
+            }
         }
 
         override fun doInBackground(vararg params: String?): Bitmap? {

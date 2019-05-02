@@ -9,11 +9,11 @@ import javax.inject.Inject
 
 class UserProfileViewModel
     @Inject constructor(private val userRepo: UserRepository): ViewModel() {
-    var user: LiveData<User>? = null
+    var user: MutableLiveData<User> = MutableLiveData()
 
-    fun init(userId: String) {
-        if (user == null) {
-            user = userRepo.getUser(userId)
+    fun load(userId: String) {
+        if (user?.value?.name != userId) {
+            userRepo.getUser(userId, user)
         }
     }
 }
